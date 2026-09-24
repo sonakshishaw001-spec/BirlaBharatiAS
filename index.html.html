@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- EDIT: page title shown in the browser tab -->
+  <title>ForgeLoop</title>
+  <meta name="description" content="One sentence about what your project does.">
+
+  <!-- Optional Google Font. If it fails to load, the page falls back to system fonts. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* ---------- 1. THEME: change colors and sizes here, everything updates ---------- */
+    :root {
+      --bg: #fbfbfa;        /* page background */
+      --surface: #ffffff;   /* header and panels */
+      --ink: #1c2321;       /* main text */
+      --muted: #5b6660;     /* secondary text */
+      --line: #e3e6e3;     /* borders */
+      --accent: #1f6f5c;    /* buttons, links, highlights */
+      --accent-ink: #ffffff;/* text on top of accent color */
+      --radius: 8px;
+      --max: 1080px;        /* content width */
+    }
+
+    /* ---------- 2. BASE ---------- */
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+    body {
+      margin: 0;
+      font-family: "DM Sans", system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.6;
+    }
+    h1, h2, h3 { line-height: 1.2; margin: 0 0 12px; }
+    h1 { font-size: clamp(2rem, 5vw, 3.4rem); letter-spacing: -0.02em; }
+    h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); letter-spacing: -0.01em; }
+    h3 { font-size: 1.15rem; }
+    p { margin: 0 0 16px; max-width: 65ch; }
+    a { color: var(--accent); }
+    :focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+
+    /* Reusable wrapper that keeps content centered */
+    .wrap { max-width: var(--max); margin: 0 auto; padding: 0 20px; }
+    section { padding: 72px 0; }
+
+    /* ---------- 3. BUTTONS ---------- */
+    .btn {
+      display: inline-block; padding: 12px 22px; border-radius: var(--radius);
+      font: inherit; font-weight: 500; text-decoration: none; cursor: pointer;
+      border: 2px solid var(--accent); background: var(--accent); color: var(--accent-ink);
+    }
+    .btn:hover { opacity: 0.9; }
+    .btn.secondary { background: transparent; color: var(--accent); }
+    .btn-row { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 8px; }
+
+    /* ---------- 4. HEADER / NAVBAR ---------- */
+    header { background: var(--surface); border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 10; }
+    .bar { display: flex; align-items: center; justify-content: space-between; min-height: 64px; }
+    .logo { font-weight: 700; font-size: 1.1rem; color: var(--ink); text-decoration: none; }
+    nav ul { display: flex; gap: 24px; list-style: none; margin: 0; padding: 0; }
+    nav a { color: var(--ink); text-decoration: none; font-weight: 500; }
+    nav a:hover { color: var(--accent); }
+    .menu-btn { display: none; background: none; border: 1px solid var(--line); border-radius: var(--radius);
+                padding: 8px 12px; font: inherit; cursor: pointer; }
+
+    /* ---------- 5. HERO ---------- */
+    .hero { padding: 96px 0 72px; }
+    .hero p { font-size: 1.15rem; color: var(--muted); }
+
+    /* ---------- 6. PROBLEM / SOLUTION ---------- */
+    .split { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
+    .panel { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 28px; }
+    .panel.solution { border-color: var(--accent); }
+
+    /* ---------- 7. FEATURES ---------- */
+    .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 32px; margin-top: 32px; }
+    .feature { border-top: 3px solid var(--accent); padding-top: 16px; }
+    .feature p { color: var(--muted); margin: 0; }
+
+    /* ---------- 8. HOW IT WORKS (numbered because it really is a sequence) ---------- */
+    ol.steps { list-style: none; counter-reset: step; padding: 0; margin: 32px 0 0; display: grid; gap: 20px; max-width: 720px; }
+    ol.steps li { counter-increment: step; display: flex; gap: 16px; align-items: flex-start; }
+    ol.steps li::before {
+      content: counter(step); flex: none; width: 36px; height: 36px; border-radius: 50%;
+      background: var(--accent); color: var(--accent-ink); font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+    }
+    ol.steps p { margin: 0; color: var(--muted); }
+
+    /* ---------- 9. CALL TO ACTION ---------- */
+    .cta { background: var(--accent); color: var(--accent-ink); }
+    .cta p { color: inherit; opacity: 0.9; }
+    .cta .btn { background: var(--accent-ink); color: var(--accent); border-color: var(--accent-ink); }
+
+    /* ---------- 10. FOOTER ---------- */
+    footer { padding: 32px 0; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.95rem; }
+    footer .wrap { display: flex; flex-wrap: wrap; gap: 12px; justify-content: space-between; }
+    footer p { margin: 0; }
+
+    /* ---------- 11. MOBILE: menu collapses below 700px ---------- */
+    @media (max-width: 700px) {
+      .menu-btn { display: block; }
+      nav { display: none; position: absolute; left: 0; right: 0; top: 64px;
+            background: var(--surface); border-bottom: 1px solid var(--line); padding: 8px 20px 16px; }
+      nav.open { display: block; }
+      nav ul { flex-direction: column; gap: 12px; }
+      section { padding: 48px 0; }
+      .hero { padding: 56px 0 40px; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ===== HEADER: EDIT the project name and the links ===== -->
+  <header>
+    <div class="wrap bar">
+      <a class="logo" href="#top">ForgeLoop</a>
+      <button class="menu-btn" id="menuBtn" aria-expanded="false" aria-controls="mainNav">Menu</button>
+      <nav id="mainNav" aria-label="Main">
+        <ul>
+          <li><a href="#problem">Problem</a></li>
+          <li><a href="#features">Features</a></li>
+          <li><a href="#how">How it works</a></li>
+          <li><a href="#try">Try it</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top">
+
+    <!-- ===== HERO: say what it does and who it is for ===== -->
+    <section class="hero">
+      <div class="wrap">
+        <h1>Describe a game. Watch it build and fix itself.</h1>
+        <p>ForgeLoop turns a single prompt into a playable 2D game, then tests it, catches its own bugs, and patches the code automatically, no human debugging required.</p>
+        <div class="btn-row">
+          <a class="btn" href="forgeloop-monitor.html">Try the demo</a>
+          <a class="btn secondary" href="#how">See how it works</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== PROBLEM / SOLUTION: matches the first two sections of your report ===== -->
+    <section id="problem">
+      <div class="wrap">
+        <div class="split">
+          <div class="panel">
+            <h2>The problem</h2>
+            <p>AI code generators write game code blind. They produce syntactically valid code that still results in blank screens, broken game loops, untriggered colliders, and impossible win states, because nothing actually plays the game to check.</p>
+          </div>
+          <div class="panel solution">
+            <h2>Our solution</h2>
+            <p>ForgeLoop closes the loop: it generates the game, runs an automated playtest to verify core mechanics actually work, and when something breaks, it diagnoses and patches its own code, then re-tests, without a person stepping in.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== FEATURES: copy a .feature block to add more ===== -->
+    <section id="features">
+      <div class="wrap">
+        <h2>What you can do</h2>
+        <div class="features">
+          <article class="feature">
+            <h3>Prompt to playable</h3>
+            <p>One natural-language prompt generates a full working 2D game, no manual setup.</p>
+          </article>
+          <article class="feature">
+            <h3>Automated playtesting</h3>
+            <p>A testing harness checks movement, collisions, scoring and win/loss states on its own.</p>
+          </article>
+          <article class="feature">
+            <h3>Self-healing pipeline</h3>
+            <p>Runtime errors are diagnosed and patched automatically, then re-verified, live in front of you.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== HOW IT WORKS: copy an <li> to add a step ===== -->
+    <section id="how">
+      <div class="wrap">
+        <h2>How it works</h2>
+        <ol class="steps">
+          <li><div><h3>Describe the game</h3><p>Type a one-line prompt, like "a platformer where you collect coins and avoid spikes."</p></div></li>
+          <li><div><h3>Watch it play itself</h3><p>The system generates code, then a playtesting bot runs the game to check it actually works.</p></div></li>
+          <li><div><h3>Watch it fix itself</h3><p>If something breaks, the agent diagnoses the bug, patches the code, and re-tests automatically.</p></div></li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ===== CALL TO ACTION: link this to your main feature page ===== -->
+    <section class="cta" id="try">
+      <div class="wrap">
+        <h2>Ready to try it?</h2>
+        <p>Type a prompt and watch the build-test-fix loop run live.</p>
+        <a class="btn" href="forgeloop-monitor.html">Open the tool</a>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===== FOOTER: list assets and libraries you used, it helps your report ===== -->
+  <footer>
+    <div class="wrap">
+      <p>ForgeLoop, built for the Genesis hackathon.</p>
+      <p>Font: DM Sans (Google Fonts)</p>
+    </div>
+  </footer>
+
+  <script>
+    // Opens and closes the menu on small screens
+    const btn = document.getElementById("menuBtn");
+    const nav = document.getElementById("mainNav");
+    btn.addEventListener("click", () => {
+      const open = nav.classList.toggle("open");
+      btn.setAttribute("aria-expanded", open);
+    });
+    // Close the menu after tapping a link
+    nav.querySelectorAll("a").forEach(a =>
+      a.addEventListener("click", () => {
+        nav.classList.remove("open");
+        btn.setAttribute("aria-expanded", "false");
+      })
+    );
+  </script>
+</body>
+</html>
